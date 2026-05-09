@@ -26,10 +26,12 @@ export default async function StudyPage({ params }: Props) {
 
   const { data: userReviews } = await supabase
     .from('flashcard_reviews')
-    .select('*')
+    .select('flashcard_id, difficulty, next_review')
     .eq('user_id', user.id)
 
-  const reviewMap = Object.fromEntries((userReviews ?? []).map((r) => [r.flashcard_id, r]))
+  const reviewMap = Object.fromEntries(
+    (userReviews ?? []).map((r) => [r.flashcard_id, { difficulty: r.difficulty, next_review: r.next_review }])
+  )
 
   const { data: progress } = await supabase
     .from('progress_metrics')
