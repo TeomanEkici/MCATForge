@@ -24,19 +24,13 @@ export default async function StudyPage({ params }: Props) {
     .eq('subsection', subsection)
     .order('created_at')
 
-  const { data: userReviewsRaw } = await supabase
+  const { data: userReviews } = await supabase
     .from('flashcard_reviews')
-    .select('flashcard_id, difficulty, next_review')
+    .select('*')
     .eq('user_id', user.id)
 
-  const userReviews = (userReviewsRaw ?? []) as Array<{
-    flashcard_id: string
-    difficulty: string
-    next_review: string
-  }>
-
   const reviewMap = Object.fromEntries(
-    userReviews.map((r) => [r.flashcard_id, { difficulty: r.difficulty, next_review: r.next_review }])
+    (userReviews ?? []).map((r) => [r.flashcard_id, r])
   )
 
   const { data: progress } = await supabase
